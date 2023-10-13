@@ -58,8 +58,8 @@ if FileExist("\Portable Software\darkMode") {
 	; Config
 	global formatX := 215
 	global formatY := 10
-	global totalApps := 73
-	global toolboxVersion := "Toolbox v1.7"
+	global totalApps := 74
+	global toolboxVersion := "Toolbox v1.8"
 
 
 Gui, Two: Add, Text, y+10 w270 vSec, Loading Home...
@@ -154,6 +154,7 @@ Gui, Two: Show, w150 h95, Toolbox Loading
 	
 	Commands	:= addSection("Commands", "imageres.dll", 4)
 		DNR				:= addApp("Diag and Repair", "console.dll", 1, Commands)
+        PCTUNEUP        := addApp("PC Tune-up", "console.dll", 1, Commands)
 		CHKDSK			:= addApp("chkdsk", "console.dll", 1, Commands)
 		DEFRAG			:= addApp("defrag", "console.dll", 1, Commands)
 		DISM			:= addApp("DISM.exe", "console.dll", 1, Commands)
@@ -292,8 +293,9 @@ Click:
 		mapApp( heaven, "\unigine\HeavenBenchmark\heaven.bat", 0, "Heaven Benchmark is a GPU-intensive benchmark that hammers graphics cards to the limits. This powerful tool can be effectively used to determine the stability of a GPU under extremely stressful conditions, as well as check the cooling system's potential under maximum heat output. The benchmark immerses a user into a magical steampunk world of shiny brass, wood and gears. Nested on flying islands, a tiny village with its cozy, sun-heated cobblestone streets, and a majestic dragon on the central square gives a true sense of adventure. An interactive experience with fly-by and walk-through modes allows for exploring all corners of this world powered by the cutting-edge UNIGINE Engine that leverages the most advanced capabilities of graphics APIs and turns this bench into a visual masterpiece. `n`n2009")
 	
 	; Commands
-	mapApp( DNR, "\Commands\DNR.bat", 1, "Runs all commands, including a virus scan, on the system drive in the optimal order to fix most issues automatically. This usally takes a while as some commands need to have 2 passes to ensure they complete properly. Will need to reboot at the end to run CHKDSK, script will halt until your ready. If you want to skip a given command, press ctrl+c and select 'N' when asked if you want to terminate the script.")
-	mapApp( CHKDSK, "\Commands\CHKDSK.bat", 1, "A command that will scan and repair drives fixing corrupted file system including relocating bad sectors and fixing currupted files on selected drive.")
+	mapApp( DNR, "\Commands\DNR.bat", 1, "Runs all commands, including a virus scan, on the system drive in the optimal order to fix most issues automatically. This usally takes a while as some commands need to have 2 passes to ensure they complete properly. Will need to reboot at the end to run CHKDSK if needed, script will halt until your ready. If you want to skip a given command, press ctrl+c and select 'N' when asked if you want to terminate the script.")
+	mapApp( PCTUNEUP, "\Commands\PCTUNEUP.bat", 1, "Similar to Diag and Repair but no virus scan and only one system repair pass, use this if you know the system is safe but its running slow. Runs DISM, SFC, Defrag, and chkdsk if its needed.")
+    mapApp( CHKDSK, "\Commands\CHKDSK.bat", 1, "A command that will scan and repair drives fixing corrupted file system including relocating bad sectors and fixing currupted files on selected drive.")
 	mapApp( DEFRAG, "\Commands\DEFRAG.bat", 1, "Uses the built in defrag command to perform the proper optimization for the selected drive. EX: HDD will be defragmented but a SSD will be trimmed.")
 	mapApp( DISM, "\Commands\DISM.bat", 1, "An administrator-level, command-line executable available in Windows which can be used to repair your Windows image or to modify Windows installation media. It is able to mount Windows images in .wim, .vhd, or .vhdx format, and can be used to address issues in the currently installed Windows operating system.")
 	mapApp( SFC, "\Commands\SFC.bat", 1, "A command that will scan all protected system files, and replace corrupted files with a cached copy that is located in a compressed folder at C:\Windows\System32\dllcache.")
@@ -485,16 +487,16 @@ Click:
 		Gui, Add, Text, x230 y30 w270, Easy to use app for launching apps installed on this flashdrive. `n`nRight Click on the "Start App" button to force it to run as administrator.
 		Gui, Add, GroupBox, x218 y%formatY% w297 h263, %toolboxVersion%
 		
-		Gui, Add, Text, x%formatX% y+10, Quick Power Options:
+		Gui, Add, Text, x%formatX% y+10, Quick Options:
 		
 		if (darkMode = true) {
 			Gui, Add, Text, Center 0x200 Border x%formatX% y+0 w100 h30 grestartRecovery, Boot To Recovery
 			Gui, Add, Text, Center 0x200 Border x+0 w100 h30 grestartUEFI, Boot To BIOS
-			Gui, Add, Text, Center 0x200 Border x+0 w100 h30 ghibernate, Hibernate
+			Gui, Add, Text, Center 0x200 Border x+0 w100 h30 grepair, Repair Toolbox
 		} else {
 			Gui, Add, Button, x%formatX% y+0 w100 h30 grestartRecovery, Boot To Recovery
 			Gui, Add, Button, x+0 w100 h30 grestartUEFI, Boot To BIOS
-			Gui, Add, Button, x+0 w100 h30 ghibernate, Hibernate
+			Gui, Add, Button, x+0 w100 h30 grepair, Repair Toolbox
 		}
 		
 		Gui, Add, Text, x%formatX% y+10, Click on a section below to jump to it:
@@ -525,8 +527,8 @@ Click:
 			Run %CD%\Portable Software\Home\restartRecvoery.bat
 		return
 		
-		hibernate: 
-			Run %CD%\Portable Software\Home\hibernate.bat
+		repair: 
+			Run %CD%\Portable Software\Home\repair.bat
 		return
 	}
 
